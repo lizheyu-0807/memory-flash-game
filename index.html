@@ -69,7 +69,7 @@
 
     .status-board {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin: 0 auto 18px;
     }
@@ -187,6 +187,22 @@
       animation: wrongPulse 120ms ease-in-out 4;
     }
 
+    .color-grid.cheering .color-button {
+      animation: cheerBounce 430ms ease-in-out 2;
+    }
+
+    .color-grid.cheering .color-button:nth-child(2) {
+      animation-delay: 80ms;
+    }
+
+    .color-grid.cheering .color-button:nth-child(3) {
+      animation-delay: 160ms;
+    }
+
+    .color-grid.cheering .color-button:nth-child(4) {
+      animation-delay: 240ms;
+    }
+
     .start-button {
       min-height: 54px;
       min-width: min(100%, 230px);
@@ -220,6 +236,214 @@
       transform: none;
     }
 
+    .leaderboard-panel {
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 22px;
+      box-shadow: 0 10px 24px rgba(74, 100, 135, 0.11);
+      text-align: left;
+    }
+
+    .leaderboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .leaderboard-title {
+      margin: 0;
+      color: #31547c;
+      font-size: 1.18rem;
+      line-height: 1.2;
+    }
+
+    .clear-records-button {
+      min-height: 36px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 14px;
+      color: #ffffff;
+      background: #7a8da8;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    .clear-records-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .leaderboard-list {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+      max-height: 250px;
+      overflow: auto;
+    }
+
+    .leaderboard-record {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 9px 10px;
+      border-radius: 16px;
+      background: #f4fbff;
+    }
+
+    .record-rank {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: #4c9cff;
+      font-weight: 900;
+    }
+
+    .record-score {
+      color: #31547c;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .record-meta {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .record-date {
+      color: #7890aa;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .empty-record {
+      padding: 14px;
+      border-radius: 16px;
+      color: var(--muted);
+      background: #f4fbff;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .level-celebration {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 180ms ease, visibility 180ms ease;
+    }
+
+    .level-celebration.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .celebration-card {
+      position: relative;
+      min-width: min(86vw, 320px);
+      padding: 28px 26px;
+      border: 4px solid #ffffff;
+      border-radius: 28px;
+      background: linear-gradient(145deg, #fff6a8, #ff8ebc 52%, #66d9ff);
+      box-shadow: 0 22px 50px rgba(52, 72, 105, 0.25);
+      color: #ffffff;
+      text-align: center;
+      transform: scale(0.72) rotate(-4deg);
+    }
+
+    .level-celebration.show .celebration-card {
+      animation: celebrationPop 1150ms ease-out forwards;
+    }
+
+    .celebration-title {
+      display: block;
+      font-size: clamp(2.2rem, 10vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 4px 12px rgba(57, 76, 106, 0.25);
+    }
+
+    .celebration-text {
+      display: block;
+      margin-top: 10px;
+      font-size: clamp(1.1rem, 5vw, 1.45rem);
+      font-weight: 900;
+      text-shadow: 0 3px 9px rgba(57, 76, 106, 0.22);
+    }
+
+    .confetti {
+      position: absolute;
+      width: 11px;
+      height: 20px;
+      border-radius: 999px;
+      opacity: 0;
+    }
+
+    .level-celebration.show .confetti {
+      animation: confettiFly 950ms ease-out forwards;
+    }
+
+    .confetti:nth-child(1) {
+      left: 14%;
+      top: 12%;
+      background: var(--red);
+      animation-delay: 60ms;
+    }
+
+    .confetti:nth-child(2) {
+      left: 30%;
+      top: 2%;
+      background: var(--blue);
+      animation-delay: 120ms;
+    }
+
+    .confetti:nth-child(3) {
+      right: 28%;
+      top: 5%;
+      background: var(--green);
+      animation-delay: 20ms;
+    }
+
+    .confetti:nth-child(4) {
+      right: 13%;
+      top: 16%;
+      background: var(--yellow);
+      animation-delay: 170ms;
+    }
+
+    .confetti:nth-child(5) {
+      left: 20%;
+      bottom: 9%;
+      background: var(--yellow);
+      animation-delay: 90ms;
+    }
+
+    .confetti:nth-child(6) {
+      right: 20%;
+      bottom: 8%;
+      background: var(--red);
+      animation-delay: 140ms;
+    }
+
     @media (max-width: 420px) {
       body {
         padding: 14px;
@@ -230,12 +454,26 @@
       }
 
       .status-board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
+      }
+
+      .status-card:last-child {
+        grid-column: 1 / -1;
       }
 
       .status-card {
         min-height: 68px;
         border-radius: 17px;
+      }
+
+      .leaderboard-record {
+        grid-template-columns: 32px 1fr;
+      }
+
+      .record-date {
+        grid-column: 2;
+        text-align: left;
       }
     }
 
@@ -261,6 +499,47 @@
         transform: scale(1.04);
       }
     }
+
+    @keyframes cheerBounce {
+      0%, 100% {
+        transform: scale(1);
+      }
+      35% {
+        transform: translateY(-12px) scale(1.08) rotate(-4deg);
+      }
+      70% {
+        transform: translateY(4px) scale(0.98) rotate(3deg);
+      }
+    }
+
+    @keyframes celebrationPop {
+      0% {
+        transform: scale(0.72) rotate(-4deg);
+      }
+      35% {
+        transform: scale(1.08) rotate(3deg);
+      }
+      70% {
+        transform: scale(0.98) rotate(-1deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes confettiFly {
+      0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg) scale(0.8);
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-82px) rotate(240deg) scale(1.1);
+      }
+    }
   </style>
 </head>
 <body>
@@ -277,11 +556,15 @@
         <span class="status-label">序列长度</span>
         <span class="status-value" id="lengthText">0</span>
       </div>
+      <div class="status-card">
+        <span class="status-label">当前等级</span>
+        <span class="status-value" id="levelText">1</span>
+      </div>
     </section>
 
     <p class="message" id="messageText" role="status" aria-live="polite">点击开始游戏吧！</p>
 
-    <section class="color-grid" aria-label="颜色按钮">
+    <section class="color-grid" id="colorGrid" aria-label="颜色按钮">
       <button class="color-button red" type="button" data-color="red" aria-label="红色"></button>
       <button class="color-button green" type="button" data-color="green" aria-label="绿色"></button>
       <button class="color-button blue" type="button" data-color="blue" aria-label="蓝色"></button>
@@ -289,7 +572,28 @@
     </section>
 
     <button class="start-button" type="button" id="startButton">开始游戏</button>
+
+    <section class="leaderboard-panel" aria-labelledby="leaderboardTitle">
+      <div class="leaderboard-header">
+        <h2 class="leaderboard-title" id="leaderboardTitle">排行榜</h2>
+        <button class="clear-records-button" type="button" id="clearRecordsButton">清空</button>
+      </div>
+      <ol class="leaderboard-list" id="leaderboardList"></ol>
+    </section>
   </main>
+
+  <div class="level-celebration" id="levelCelebration" aria-hidden="true">
+    <div class="celebration-card">
+      <span class="confetti"></span>
+      <span class="confetti"></span>
+      <span class="confetti"></span>
+      <span class="confetti"></span>
+      <span class="confetti"></span>
+      <span class="confetti"></span>
+      <span class="celebration-title">升级啦！</span>
+      <span class="celebration-text" id="celebrationText">第 2 级</span>
+    </div>
+  </div>
 
   <script>
     // 四个颜色按钮及其对应音高。
@@ -300,12 +604,20 @@
       blue: 392,
       yellow: 466
     };
+    const LEVEL_SIZE = 5;
+    const LEADERBOARD_KEY = "memoryFlashLeaderboard";
 
     const buttons = Array.from(document.querySelectorAll(".color-button"));
+    const colorGrid = document.getElementById("colorGrid");
     const startButton = document.getElementById("startButton");
     const scoreText = document.getElementById("scoreText");
     const lengthText = document.getElementById("lengthText");
+    const levelText = document.getElementById("levelText");
     const messageText = document.getElementById("messageText");
+    const leaderboardList = document.getElementById("leaderboardList");
+    const clearRecordsButton = document.getElementById("clearRecordsButton");
+    const levelCelebration = document.getElementById("levelCelebration");
+    const celebrationText = document.getElementById("celebrationText");
 
     let audioContext = null;
     let sequence = [];
@@ -314,6 +626,7 @@
     let acceptingInput = false;
     let gameRunning = false;
     let inputTimerId = null;
+    let resultSaved = false;
     const INPUT_TIMEOUT_MS = 5000;
 
     function wait(milliseconds) {
@@ -386,6 +699,28 @@
       oscillator.stop(now + 0.45);
     }
 
+    function playLevelUpSound() {
+      [523, 659, 784, 1046].forEach((frequency, index) => {
+        setTimeout(() => playTone(frequency, 0.16, 0.14), index * 90);
+      });
+    }
+
+    async function showLevelCelebration(level) {
+      celebrationText.textContent = `第 ${level} 级`;
+      levelCelebration.classList.remove("show");
+      colorGrid.classList.remove("cheering");
+      levelCelebration.offsetWidth;
+      levelCelebration.setAttribute("aria-hidden", "false");
+      levelCelebration.classList.add("show");
+      colorGrid.classList.add("cheering");
+      playLevelUpSound();
+
+      await wait(1500);
+      levelCelebration.classList.remove("show");
+      levelCelebration.setAttribute("aria-hidden", "true");
+      colorGrid.classList.remove("cheering");
+    }
+
     function setButtonsDisabled(disabled) {
       buttons.forEach((button) => {
         button.disabled = disabled;
@@ -397,9 +732,95 @@
       messageText.classList.toggle("game-over", isGameOver);
     }
 
+    function getLevelFromScore(value) {
+      return Math.floor(value / LEVEL_SIZE) + 1;
+    }
+
     function updateDisplay() {
       scoreText.textContent = score;
       lengthText.textContent = sequence.length;
+      levelText.textContent = getLevelFromScore(score);
+    }
+
+    function loadLeaderboard() {
+      try {
+        const storedRecords = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
+        if (!Array.isArray(storedRecords)) return [];
+        return storedRecords.filter((record) => Number.isFinite(record.score));
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveLeaderboard(records) {
+      try {
+        localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(records));
+      } catch (error) {
+        setMessage("排行榜保存失败，但游戏可以继续玩。");
+      }
+    }
+
+    function formatRecordDate(isoDate) {
+      const date = new Date(isoDate);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString("zh-CN", {
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function renderLeaderboard() {
+      const records = loadLeaderboard();
+      leaderboardList.textContent = "";
+
+      if (records.length === 0) {
+        const emptyItem = document.createElement("li");
+        emptyItem.className = "empty-record";
+        emptyItem.textContent = "还没有记录，来挑战第一局吧！";
+        leaderboardList.appendChild(emptyItem);
+        return;
+      }
+
+      records.forEach((record, index) => {
+        const item = document.createElement("li");
+        item.className = "leaderboard-record";
+
+        const rank = document.createElement("span");
+        rank.className = "record-rank";
+        rank.textContent = index + 1;
+
+        const scoreWrap = document.createElement("span");
+        const scoreLine = document.createElement("span");
+        scoreLine.className = "record-score";
+        scoreLine.textContent = `最长 ${record.score} 个按键`;
+        const metaLine = document.createElement("span");
+        metaLine.className = "record-meta";
+        metaLine.textContent = `第 ${getLevelFromScore(record.score)} 级`;
+        scoreWrap.append(scoreLine, metaLine);
+
+        const date = document.createElement("span");
+        date.className = "record-date";
+        date.textContent = formatRecordDate(record.date);
+
+        item.append(rank, scoreWrap, date);
+        leaderboardList.appendChild(item);
+      });
+    }
+
+    function saveCurrentResult() {
+      if (resultSaved) return;
+      resultSaved = true;
+
+      const records = loadLeaderboard();
+      records.push({
+        score,
+        date: new Date().toISOString()
+      });
+      records.sort((a, b) => b.score - a.score || new Date(b.date) - new Date(a.date));
+      saveLeaderboard(records.slice(0, 10));
+      renderLeaderboard();
     }
 
     function pickRandomColor() {
@@ -466,6 +887,7 @@
       score = 0;
       gameRunning = true;
       acceptingInput = false;
+      resultSaved = false;
       startButton.textContent = "重新开始";
       startButton.disabled = true;
       setMessage("新挑战开始！");
@@ -479,9 +901,17 @@
       setButtonsDisabled(true);
       score += 1;
       updateDisplay();
-      setMessage("太棒了！下一轮更长一点。");
+      const reachedNewLevel = score > 0 && score % LEVEL_SIZE === 0;
 
-      await wait(760);
+      if (reachedNewLevel) {
+        const nextLevel = getLevelFromScore(score);
+        setMessage(`升级到第 ${nextLevel} 级！继续加油。`);
+        await showLevelCelebration(nextLevel);
+      } else {
+        setMessage("太棒了！下一轮更长一点。");
+        await wait(760);
+      }
+
       if (!gameRunning) return;
 
       addNextColor();
@@ -491,6 +921,7 @@
     async function endGame(message = "游戏结束！点击开始游戏重新挑战。") {
       acceptingInput = false;
       clearInputTimer();
+      saveCurrentResult();
       gameRunning = false;
       startButton.disabled = false;
       setButtonsDisabled(true);
@@ -533,9 +964,19 @@
       });
     });
 
+    clearRecordsButton.addEventListener("click", () => {
+      try {
+        localStorage.removeItem(LEADERBOARD_KEY);
+      } catch (error) {
+        setMessage("排行榜清空失败，请稍后再试。");
+      }
+      renderLeaderboard();
+    });
+
     startButton.addEventListener("click", startGame);
 
     setButtonsDisabled(true);
+    renderLeaderboard();
     updateDisplay();
   </script>
 </body>
