@@ -248,7 +248,7 @@
     .leaderboard-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: 12px;
     }
 
@@ -257,23 +257,6 @@
       color: #31547c;
       font-size: 1.18rem;
       line-height: 1.2;
-    }
-
-    .clear-records-button {
-      min-height: 36px;
-      border: 0;
-      border-radius: 999px;
-      padding: 0 14px;
-      color: #ffffff;
-      background: #7a8da8;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 120ms ease, filter 120ms ease;
-    }
-
-    .clear-records-button:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.04);
     }
 
     .leaderboard-list {
@@ -312,6 +295,10 @@
       color: #31547c;
       font-weight: 900;
       line-height: 1.2;
+    }
+
+    .record-player {
+      color: #ff5f72;
     }
 
     .record-meta {
@@ -442,6 +429,107 @@
       bottom: 8%;
       background: var(--red);
       animation-delay: 140ms;
+    }
+
+    .record-name-dialog {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(40, 65, 95, 0.36);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 180ms ease, visibility 180ms ease;
+    }
+
+    .record-name-dialog.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .record-name-card {
+      width: min(90vw, 380px);
+      padding: 24px;
+      border: 4px solid #ffffff;
+      border-radius: 26px;
+      background: #ffffff;
+      box-shadow: 0 24px 60px rgba(52, 72, 105, 0.28);
+      text-align: center;
+    }
+
+    .record-name-title {
+      margin: 0;
+      color: #31547c;
+      font-size: clamp(1.7rem, 7vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    .record-name-score {
+      margin: 10px 0 16px;
+      color: #ff5f72;
+      font-size: 1.08rem;
+      font-weight: 900;
+    }
+
+    .record-name-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .record-name-input {
+      width: 100%;
+      min-height: 48px;
+      border: 3px solid #dff0ff;
+      border-radius: 16px;
+      padding: 0 14px;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 900;
+      text-align: center;
+      outline: none;
+      transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .record-name-input:focus {
+      border-color: #4c9cff;
+      box-shadow: 0 0 0 5px rgba(76, 156, 255, 0.16);
+    }
+
+    .record-name-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .record-name-button {
+      min-height: 46px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 14px;
+      color: #ffffff;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    .record-name-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .record-name-button.default {
+      background: #7a8da8;
+    }
+
+    .record-name-button.save {
+      background: linear-gradient(135deg, #42d886, #4c9cff);
     }
 
     @media (max-width: 420px) {
@@ -576,7 +664,6 @@
     <section class="leaderboard-panel" aria-labelledby="leaderboardTitle">
       <div class="leaderboard-header">
         <h2 class="leaderboard-title" id="leaderboardTitle">排行榜</h2>
-        <button class="clear-records-button" type="button" id="clearRecordsButton">清空</button>
       </div>
       <ol class="leaderboard-list" id="leaderboardList"></ol>
     </section>
@@ -593,6 +680,19 @@
       <span class="celebration-title">升级啦！</span>
       <span class="celebration-text" id="celebrationText">第 2 级</span>
     </div>
+  </div>
+
+  <div class="record-name-dialog" id="recordNameDialog" role="dialog" aria-modal="true" aria-labelledby="recordNameTitle" aria-hidden="true">
+    <form class="record-name-card" id="recordNameForm">
+      <h2 class="record-name-title" id="recordNameTitle">你上榜啦！</h2>
+      <p class="record-name-score" id="recordNameScore">最长 0 个按键</p>
+      <label class="record-name-label" for="recordNameInput">给这次记录起个名字</label>
+      <input class="record-name-input" id="recordNameInput" type="text" maxlength="12" placeholder="小玩家" autocomplete="off">
+      <div class="record-name-actions">
+        <button class="record-name-button default" type="button" id="useDefaultNameButton">直接保存</button>
+        <button class="record-name-button save" type="submit">保存名字</button>
+      </div>
+    </form>
   </div>
 
   <script>
@@ -615,9 +715,13 @@
     const levelText = document.getElementById("levelText");
     const messageText = document.getElementById("messageText");
     const leaderboardList = document.getElementById("leaderboardList");
-    const clearRecordsButton = document.getElementById("clearRecordsButton");
     const levelCelebration = document.getElementById("levelCelebration");
     const celebrationText = document.getElementById("celebrationText");
+    const recordNameDialog = document.getElementById("recordNameDialog");
+    const recordNameForm = document.getElementById("recordNameForm");
+    const recordNameInput = document.getElementById("recordNameInput");
+    const recordNameScore = document.getElementById("recordNameScore");
+    const useDefaultNameButton = document.getElementById("useDefaultNameButton");
 
     let audioContext = null;
     let sequence = [];
@@ -627,6 +731,7 @@
     let gameRunning = false;
     let inputTimerId = null;
     let resultSaved = false;
+    let pendingNameResolver = null;
     const INPUT_TIMEOUT_MS = 5000;
 
     function wait(milliseconds) {
@@ -736,6 +841,15 @@
       return Math.floor(value / LEVEL_SIZE) + 1;
     }
 
+    function getSafePlayerName(name) {
+      const trimmedName = String(name || "").trim().slice(0, 12);
+      return trimmedName || "小玩家";
+    }
+
+    function sortLeaderboardRecords(records) {
+      return records.sort((a, b) => b.score - a.score || new Date(b.date) - new Date(a.date));
+    }
+
     function updateDisplay() {
       scoreText.textContent = score;
       lengthText.textContent = sequence.length;
@@ -746,7 +860,14 @@
       try {
         const storedRecords = JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || "[]");
         if (!Array.isArray(storedRecords)) return [];
-        return storedRecords.filter((record) => Number.isFinite(record.score));
+        const records = storedRecords
+          .filter((record) => record && Number.isFinite(Number(record.score)))
+          .map((record) => ({
+            score: Number(record.score),
+            name: getSafePlayerName(record.name),
+            date: record.date || new Date().toISOString()
+          }));
+        return sortLeaderboardRecords(records).slice(0, 10);
       } catch (error) {
         return [];
       }
@@ -794,7 +915,10 @@
         const scoreWrap = document.createElement("span");
         const scoreLine = document.createElement("span");
         scoreLine.className = "record-score";
-        scoreLine.textContent = `最长 ${record.score} 个按键`;
+        const playerName = document.createElement("span");
+        playerName.className = "record-player";
+        playerName.textContent = getSafePlayerName(record.name);
+        scoreLine.append(playerName, `：最长 ${record.score} 个按键`);
         const metaLine = document.createElement("span");
         metaLine.className = "record-meta";
         metaLine.textContent = `第 ${getLevelFromScore(record.score)} 级`;
@@ -809,18 +933,58 @@
       });
     }
 
-    function saveCurrentResult() {
+    function isLeaderboardScore(value, records = loadLeaderboard()) {
+      if (value <= 0) return false;
+      if (records.length < 10) return true;
+      return value >= records[records.length - 1].score;
+    }
+
+    function closeRecordNameDialog(name) {
+      recordNameDialog.classList.remove("show");
+      recordNameDialog.setAttribute("aria-hidden", "true");
+
+      if (pendingNameResolver) {
+        const resolver = pendingNameResolver;
+        pendingNameResolver = null;
+        resolver(getSafePlayerName(name));
+      }
+    }
+
+    function requestRecordName(value) {
+      recordNameScore.textContent = `最长 ${value} 个按键`;
+      recordNameInput.value = "";
+      recordNameDialog.classList.add("show");
+      recordNameDialog.setAttribute("aria-hidden", "false");
+
+      if (typeof recordNameInput.focus === "function") {
+        recordNameInput.focus({ preventScroll: true });
+      }
+
+      return new Promise((resolve) => {
+        pendingNameResolver = resolve;
+      });
+    }
+
+    async function saveCurrentResult() {
       if (resultSaved) return;
       resultSaved = true;
 
       const records = loadLeaderboard();
+      if (!isLeaderboardScore(score, records)) {
+        renderLeaderboard();
+        return;
+      }
+
+      setMessage("你上榜啦！给这次记录起个名字吧。");
+      const playerName = await requestRecordName(score);
       records.push({
         score,
+        name: playerName,
         date: new Date().toISOString()
       });
-      records.sort((a, b) => b.score - a.score || new Date(b.date) - new Date(a.date));
-      saveLeaderboard(records.slice(0, 10));
+      saveLeaderboard(sortLeaderboardRecords(records).slice(0, 10));
       renderLeaderboard();
+      setMessage("上榜记录已保存！点击开始游戏重新挑战。", true);
     }
 
     function pickRandomColor() {
@@ -921,7 +1085,6 @@
     async function endGame(message = "游戏结束！点击开始游戏重新挑战。") {
       acceptingInput = false;
       clearInputTimer();
-      saveCurrentResult();
       gameRunning = false;
       startButton.disabled = false;
       setButtonsDisabled(true);
@@ -931,6 +1094,7 @@
       buttons.forEach((button) => button.classList.add("wrong-flash"));
       await wait(620);
       buttons.forEach((button) => button.classList.remove("wrong-flash"));
+      await saveCurrentResult();
     }
 
     // 每次点击后立即校验当前位置，错了就结束，对了就继续。
@@ -964,13 +1128,13 @@
       });
     });
 
-    clearRecordsButton.addEventListener("click", () => {
-      try {
-        localStorage.removeItem(LEADERBOARD_KEY);
-      } catch (error) {
-        setMessage("排行榜清空失败，请稍后再试。");
-      }
-      renderLeaderboard();
+    recordNameForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      closeRecordNameDialog(recordNameInput.value);
+    });
+
+    useDefaultNameButton.addEventListener("click", () => {
+      closeRecordNameDialog("");
     });
 
     startButton.addEventListener("click", startGame);
